@@ -168,7 +168,7 @@ class Graph:
         
 
 
-    def dfs_recursive(self, starting_vertex, destination_vertex, visited=None, path=None):
+    def dfs_recursive(self, vertex, destination, path=[]):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -176,21 +176,29 @@ class Graph:
 
         This should be done using recursion.
         """
-        if visited is None:
-            visited = set()
-        if path is None:
-            path = []
-        visited.add(starting_vertex)
-        path.append(starting_vertex)
-        if starting_vertex == destination_vertex:
-            return path
-        for neighbor in self.get_neighbors(starting_vertex):
-            if neighbor not in visited:
-                new_path = self.dfs_recursive(neighbor, destination_vertex, visited, path)
-                if new_path:
-                    return new_path
-
-        return None
+        # if visited is None:
+        #     visited = set()
+        # if path is None:
+        #     path = []
+        # visited.add(starting_vertex)
+        # path = path + [starting_vertex]
+        # if starting_vertex == destination_vertex:
+        #     return path
+        # for neighbor in self.get_neighbors(starting_vertex):
+        #     if neighbor not in path:
+        #         new_path = self.dfs_recursive(neighbor, destination_vertex, path)
+        #         if new_path:
+        #             return new_path
+        path = path + [vertex]                                        # path will whatever path currently is + [vertex] (note that first pass will be just that first vertex)
+        if vertex == destination:                                     # base case - if our vertex is our destination, return path at that point
+            return path                                               
+        neighbors = self.get_neighbors(vertex)                        # if our vertex is not what we are looking for, get the neighbors of that vertex...
+        for neighbor in neighbors:                                    # for every neighbor in neighbors...
+            if neighbor not in path:                                  # if that neighbor is not in our path
+                path_copy = self.dfs_recursive(neighbor,destination, path) # create a copy and it'll equal the next recursion of the function, only this time we pass the neighbor, destination, and current state of our path
+                if path_copy:                                              # return path_copy if we have one
+                    return path_copy
+        
         
 
 if __name__ == '__main__':
